@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Ayat Berdasarkan Suasana Hati</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.08);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin-bottom: 15px;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+    }
+
+    button {
+      background: #38bdf8;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .ayat {
+      margin-top: 20px;
+      font-style: italic;
+      line-height: 1.6;
+      animation: fade 0.5s;
+    }
+
+    @keyframes fade {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>📖 Ayat Sesuai Suasana Hati</h1>
+
+  <select id="agama">
+    <option value="">-- Pilih Agama --</option>
+    <option value="kristen">✝️ Kristen</option>
+    <option value="islam">☪️ Islam</option>
+  </select>
+
+  <select id="mood">
+    <option value="">-- Pilih Suasana Hati --</option>
+    <option value="senang">😊 Senang</option>
+    <option value="sedih">😔 Sedih</option>
+    <option value="cemas">😟 Cemas</option>
+    <option value="kuat">💪 Butuh Kekuatan</option>
+    <option value="tenang">🤍 Tenang</option>
+  </select>
+
+  <button onclick="tampilkanAyat()">Tampilkan Ayat</button>
+
+  <div class="ayat" id="ayat"></div>
+  <strong id="kitab"></strong>
+</div>
+
+<script>
+  const dataAyat = {
+    kristen: {
+      senang: [
+        { ayat: "Bersukacitalah senantiasa dalam Tuhan!", kitab: "Filipi 4:4" },
+        { ayat: "Hati yang gembira adalah obat yang manjur.", kitab: "Amsal 17:22" },
+        { ayat: "Aku akan memuliakan TUHAN selama aku hidup.", kitab: "Mazmur 146:2" },
+        { ayat: "Sukacita TUHAN itulah perlindunganmu.", kitab: "Nehemia 8:10" },
+        { ayat: "Bersorak-sorailah bagi TUHAN, hai seluruh bumi.", kitab: "Mazmur 100:1" }
+      ],
+      sedih: [
+        { ayat: "TUHAN itu dekat kepada orang-orang yang patah hati.", kitab: "Mazmur 34:19" },
+        { ayat: "Ia menyembuhkan orang-orang yang patah hati.", kitab: "Mazmur 147:3" },
+        { ayat: "Menangis boleh pada waktu malam, tetapi sorak-sorai datang pada waktu pagi.", kitab: "Mazmur 30:6" },
+        { ayat: "TUHAN menopang semua orang yang jatuh.", kitab: "Mazmur 145:14" },
+        { ayat: "Aku sekali-kali tidak akan meninggalkan engkau.", kitab: "Ibrani 13:5" }
+      ],
+      cemas: [
+        { ayat: "Serahkanlah segala kekuatiranmu kepada-Nya.", kitab: "1 Petrus 5:7" },
+        { ayat: "Janganlah hendaknya kamu kuatir tentang apapun juga.", kitab: "Filipi 4:6" },
+        { ayat: "Janganlah takut, sebab Aku menyertai engkau.", kitab: "Yesaya 41:10" },
+        { ayat: "TUHAN adalah terangku dan keselamatanku.", kitab: "Mazmur 27:1" },
+        { ayat: "Dalam takutku, aku percaya kepada-Mu.", kitab: "Mazmur 56:4" }
+      ],
+      kuat: [
+        { ayat: "Segala perkara dapat kutanggung di dalam Dia.", kitab: "Filipi 4:13" },
+        { ayat: "Tetapi orang-orang yang menanti-nantikan TUHAN mendapat kekuatan baru.", kitab: "Yesaya 40:31" },
+        { ayat: "Kasih karunia-Ku cukup bagimu.", kitab: "2 Korintus 12:9" },
+        { ayat: "TUHAN adalah kekuatanku dan perisaiku.", kitab: "Mazmur 28:7" },
+        { ayat: "Teguhkanlah hatimu dan berharaplah kepada TUHAN.", kitab: "Mazmur 27:14" }
+      ],
+      tenang: [
+        { ayat: "Diamlah dan ketahuilah bahwa Akulah Allah.", kitab: "Mazmur 46:11" },
+        { ayat: "Damai sejahtera-Ku Kuberikan kepadamu.", kitab: "Yohanes 14:27" },
+        { ayat: "Ia membaringkan aku di padang yang berumput hijau.", kitab: "Mazmur 23:2" },
+        { ayat: "Damai sejahtera Allah akan memelihara hatimu.", kitab: "Filipi 4:7" },
+        { ayat: "TUHAN memberkati engkau dengan damai sejahtera.", kitab: "Bilangan 6:26" }
+      ]
+    },
+
+    islam: {
+      senang: [
+        { ayat: "Maka nikmat Tuhanmu yang manakah yang kamu dustakan?", kitab: "QS. Ar-Rahman: 13" },
+        { ayat: "Bersyukurlah kepada-Ku dan janganlah kamu mengingkari.", kitab: "QS. Al-Baqarah: 152" },
+        { ayat: "Jika kamu bersyukur, pasti Aku akan menambah nikmat kepadamu.", kitab: "QS. Ibrahim: 7" },
+        { ayat: "Makanlah rezeki yang diberikan Allah dan bersyukurlah.", kitab: "QS. An-Nahl: 114" },
+        { ayat: "Dan bersukacitalah dengan karunia Allah.", kitab: "QS. Yunus: 58" }
+      ],
+      sedih: [
+        { ayat: "Sesungguhnya bersama kesulitan ada kemudahan.", kitab: "QS. Al-Insyirah: 6" },
+        { ayat: "Janganlah kamu berputus asa dari rahmat Allah.", kitab: "QS. Az-Zumar: 53" },
+        { ayat: "Allah Maha Lembut terhadap hamba-hamba-Nya.", kitab: "QS. Asy-Syura: 19" },
+        { ayat: "Allah mengetahui apa yang ada di dalam hatimu.", kitab: "QS. Al-Ahzab: 51" },
+        { ayat: "Boleh jadi kamu membenci sesuatu, padahal ia baik bagimu.", kitab: "QS. Al-Baqarah: 216" }
+      ],
+      cemas: [
+        { ayat: "Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram.", kitab: "QS. Ar-Ra’d: 28" },
+        { ayat: "Allah tidak membebani seseorang melainkan sesuai kesanggupannya.", kitab: "QS. Al-Baqarah: 286" },
+        { ayat: "Cukuplah Allah menjadi penolong kami.", kitab: "QS. Ali Imran: 173" },
+        { ayat: "Dan bertawakallah kepada Allah.", kitab: "QS. Al-Ahzab: 3" },
+        { ayat: "Sesungguhnya Allah bersama orang-orang yang bertakwa.", kitab: "QS. An-Nahl: 128" }
+      ],
+      kuat: [
+        { ayat: "Sesungguhnya Allah bersama orang-orang yang sabar.", kitab: "QS. Al-Baqarah: 153" },
+        { ayat: "Janganlah kamu merasa lemah dan jangan bersedih hati.", kitab: "QS. Ali Imran: 139" },
+        { ayat: "Allah menyukai orang-orang yang bertawakal.", kitab: "QS. Ali Imran: 159" },
+        { ayat: "Mintalah pertolongan dengan sabar dan salat.", kitab: "QS. Al-Baqarah: 45" },
+        { ayat: "Dan orang-orang yang bersungguh-sungguh di jalan Kami.", kitab: "QS. Al-Ankabut: 69" }
+      ],
+      tenang: [
+        { ayat: "Dan Dia-lah yang menurunkan ketenangan ke dalam hati orang-orang beriman.", kitab: "QS. Al-Fath: 4" },
+        { ayat: "Tuhanmu tidak meninggalkan engkau.", kitab: "QS. Ad-Duha: 3" },
+        { ayat: "Allah Maha Pengampun lagi Maha Penyayang.", kitab: "QS. Al-Baqarah: 218" },
+        { ayat: "Dan Allah memberi rasa aman kepada mereka.", kitab: "QS. Quraisy: 4" },
+        { ayat: "Kepada Allah-lah hati menjadi tenang.", kitab: "QS. Az-Zumar: 23" }
+      ]
+    }
+  };
+
+  function tampilkanAyat() {
+    const agama = document.getElementById("agama").value;
+    const mood = document.getElementById("mood").value;
+    if (!agama || !mood) return;
+
+    const daftar = dataAyat[agama][mood];
+    const random = Math.floor(Math.random() * daftar.length);
+    document.getElementById("ayat").innerText = daftar[random].ayat;
+    document.getElementById("kitab").innerText = daftar[random].kitab;
+  }
+</script>
+
+</body>
+</html>
